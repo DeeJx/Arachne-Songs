@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Song Vault">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Arachne Song Vault</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #141420;
+      --bg4: #1a1a28;
+      --border: #1f1f2e;
+      --border2: #2a2a3a;
+      --gold: #d4a853;
+      --gold2: #b8912e;
+      --purple: #7c3aed;
+      --purple-bg: #1c1830;
+      --green: #10b981;
+      --red: #ef4444;
+      --amber: #d97706;
+      --blue: #3b82f6;
+      --text: #e0ddd5;
+      --text2: #c0bdb5;
+      --text3: #8a8a9a;
+      --text4: #6b6b7b;
+      --text5: #4a4a5a;
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Raleway', sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding-top: var(--safe-top);
+    }
+    .header-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { font-size: 24px; }
+    .logo-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1.2;
+    }
+    .logo-sub {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text4);
+    }
+
+    /* ─── Buttons ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: var(--bg);
+      padding: 10px 18px;
+      font-weight: 600;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text3);
+      border: 1px solid var(--border2);
+      padding: 9px 16px;
+    }
+    .btn-sm {
+      background: var(--bg4);
+      color: var(--text3);
+      border: 1px solid var(--border2);
+      padding: 7px 12px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+    .btn-sm-danger {
+      background: transparent;
+      color: #6b4040;
+      border: 1px solid #2a1a1a;
+      padding: 7px 9px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+    .btn-danger {
+      background: #3a1515;
+      color: var(--red);
+      border: 1px solid #5a2020;
+      padding: 7px 12px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+    .btn-current {
+      background: #1a2520;
+      color: var(--green);
+      border: 1px solid var(--green);
+      padding: 7px 12px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+
+    /* ─── Main ─── */
+    .main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 20px 20px calc(100px + var(--safe-bottom));
+    }
+
+    /* ─── Stats ─── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 14px 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text4);
+    }
+
+    /* ─── Search & Filters ─── */
+    .filters { margin-bottom: 16px; }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+    .search-box svg { color: var(--text4); flex-shrink: 0; }
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font-body);
+    }
+    .search-input::placeholder { color: var(--text5); }
+    .clear-btn {
+      background: none;
+      border: none;
+      color: var(--text4);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .sel {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--text2);
+      font-size: 12px;
+      font-family: var(--font-body);
+      outline: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b6b7b' stroke-width='1.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+
+    /* ─── Now Playing ─── */
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #1a1525, var(--bg3));
+      border: 1px solid #2a2040;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+    .play-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .np-info { overflow: hidden; }
+    .np-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--purple);
+    }
+    .np-title {
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ─── Song Cards ─── */
+    .song-list { display: flex; flex-direction: column; gap: 3px; }
+    .song-card {
+      background: var(--bg2);
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 14px;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .song-card.dragging { opacity: 0.5; border-color: var(--gold); }
+    .song-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .song-num {
+      font-family: var(--font-display);
+      font-size: 13px;
+      color: var(--text5);
+      min-width: 22px;
+      text-align: center;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+    .song-body { flex: 1; min-width: 0; }
+    .song-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .song-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: #e8e5dd;
+    }
+    .status-badge {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .song-album {
+      font-size: 12px;
+      color: var(--text4);
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .song-desc {
+      font-size: 13px;
+      color: var(--text3);
+      margin-top: 5px;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .song-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .stars { display: flex; gap: 1px; }
+    .star {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      background: none;
+      border: none;
+      padding: 2px;
+    }
+    .ver-count { font-size: 11px; color: var(--text4); }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+    .tag {
+      font-size: 11px;
+      color: #9b8acd;
+      background: var(--purple-bg);
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-body);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .song-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .move-btns { display: flex; gap: 3px; }
+    .move-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text4);
+      cursor: pointer;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .move-btn:disabled { opacity: 0.3; }
+    .confirm-del { display: flex; gap: 6px; align-items: center; }
+
+    /* ─── Empty State ─── */
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 14px; }
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .empty-text { color: var(--text4); margin-bottom: 24px; }
+
+    /* ─── Edit View ─── */
+    .edit-container { max-width: 640px; margin: 0 auto; }
+    .edit-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .form-section { margin-bottom: 18px; }
+    .form-row { display: flex; gap: 12px; }
+    .form-row > * { flex: 1; }
+    .label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text4);
+      margin-bottom: 6px;
+    }
+    .label-sm {
+      display: block;
+      font-size: 11px;
+      color: var(--text4);
+      margin-bottom: 4px;
+    }
+    .hint { font-size: 12px; color: var(--text5); margin-top: 5px; }
+    .inp {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .inp:focus { border-color: var(--gold); }
+    .inp-sm {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+    .txta {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font-body);
+      outline: none;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .txta:focus { border-color: var(--gold); }
+    .txta-sm {
+      width: 100%;
+      background: #0e0e18;
+      border: 1px solid var(--bg4);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--text2);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    .tag-input-row { display: flex; gap: 8px; align-items: center; }
+    .tag-editable {
+      font-size: 12px;
+      color: #9b8acd;
+      background: var(--purple-bg);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tag-remove {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      line-height: 1;
+    }
+    .stars-row { display: flex; align-items: center; gap: 2px; }
+    .rating-text { font-size: 13px; color: var(--gold); margin-left: 8px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .version-list { display: flex; flex-direction: column; gap: 8px; }
+    .version-card {
+      background: #0e0e18;
+      border: 1px solid var(--bg4);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .version-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      cursor: pointer;
+      color: var(--text3);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .version-hdr-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .version-num {
+      font-family: var(--font-display);
+      font-size: 12px;
+      color: var(--text5);
+    }
+    .version-label-inp {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 4px 8px;
+      color: var(--text2);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+      width: 100%;
+      max-width: 180px;
+    }
+    .version-label-inp:focus { border-color: var(--border); }
+    .current-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .version-body { padding: 0 14px 14px; }
+    .version-actions {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Toast ─── */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg4);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 1000;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+      border-left: 3px solid var(--gold);
+      animation: slideUp 0.3s ease;
+      white-space: nowrap;
+    }
+    .toast.error { border-left-color: var(--red); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translate(-50%, 20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* ─── Audio Progress ─── */
+    .audio-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      width: 100%;
+    }
+    .audio-progress {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .audio-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+    .audio-time { font-size: 11px; color: var(--text4); flex-shrink: 0; }
+
+    /* Responsive */
+    @media (max-width: 400px) {
+      .form-row { flex-direction: column; gap: 14px; }
+      .stats { gap: 14px; }
+      .stat-num { font-size: 18px; }
+    }
+
+    /* Hide file inputs */
+    .hidden-input { display: none; }
+
+    /* Loading */
+    .loading {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .loading-icon { font-size: 48px; animation: pulse 2s infinite; }
+    .loading-text {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    // ═══════════════════════════════════════
+    // Arachne Song Vault — Core App
+    // ═══════════════════════════════════════
+
+    const ALBUMS = [
+      "The Keeper of Time",
+      "The Quiet War",
+      "Where Silence Burns",
+      "Singles",
+      "Other"
+    ];
+
+    const STATUS_OPTIONS = [
+      { value: "draft", label: "Draft", color: "#6b7280" },
+      { value: "in-progress", label: "In Progress", color: "#d97706" },
+      { value: "review", label: "Needs Review", color: "#7c3aed" },
+      { value: "final", label: "Final", color: "#10b981" },
+      { value: "released", label: "Released", color: "#3b82f6" }
+    ];
+
+    // ─── IndexedDB for audio storage ───
+    const DB_NAME = "arachne-vault-db";
+    const DB_VERSION = 1;
+    const AUDIO_STORE = "audio-files";
+    const META_STORE = "song-meta";
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(AUDIO_STORE)) {
+            db.createObjectStore(AUDIO_STORE, { keyPath: "id" });
+          }
+          if (!db.objectStoreNames.contains(META_STORE)) {
+            db.createObjectStore(META_STORE, { keyPath: "id" });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveAudio(songId, file) {
+      const db = await openDB();
+      const arrayBuffer = await file.arrayBuffer();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(AUDIO_STORE, "readwrite");
+        tx.objectStore(AUDIO_STORE).put({
+          id: songId,
+          data: arrayBuffer,
+          name: file.name,
+          type: file.type,
+          size: file.size
+        });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function getAudio(songId) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(AUDIO_STORE, "readonly");
+        const req = tx.objectStore(AUDIO_STORE).get(songId);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function deleteAudio(songId) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(AUDIO_STORE, "readwrite");
+        tx.objectStore(AUDIO_STORE).delete(songId);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function hasAudio(songId) {
+      const a = await getAudio(songId);
+      return a !== null;
+    }
+
+    // ─── Songs metadata (localStorage) ───
+    function loadSongs() {
+      try {
+        const data = localStorage.getItem("arachne-songs");
+        return data ? JSON.parse(data) : [];
+      } catch { return []; }
+    }
+
+    function saveSongsData(songs) {
+      localStorage.setItem("arachne-songs", JSON.stringify(songs));
+    }
+
+    // ─── Utility ───
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 8);
+    }
+
+    function formatTime(s) {
+      if (!s || isNaN(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ":" + (sec < 10 ? "0" : "") + sec;
+    }
+
+    function esc(str) {
+      const d = document.createElement("div");
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    // ─── State ───
+    let state = {
+      songs: [],
+      view: "library",
+      editingSong: null,
+      search: "",
+      filterAlbum: "all",
+      filterStatus: "all",
+      filterTag: "",
+      sortBy: "order",
+      playingSongId: null,
+      isPlaying: false,
+      audioProgress: 0,
+      audioDuration: 0,
+      audioCurrentTime: 0,
+      confirmDeleteId: null,
+      toast: null,
+      toastTimeout: null,
+      tagInput: "",
+      expandedVersions: {},
+      audioMap: {} // songId -> true if has audio
+    };
+
+    let audioEl = new Audio();
+    let currentAudioUrl = null;
+
+    audioEl.addEventListener("timeupdate", () => {
+      state.audioCurrentTime = audioEl.currentTime;
+      state.audioDuration = audioEl.duration;
+      updateNowPlaying();
+    });
+    audioEl.addEventListener("ended", () => {
+      state.isPlaying = false;
+      updateNowPlaying();
+    });
+
+    // ─── Toast ───
+    function showToast(msg, type = "success") {
+      if (state.toastTimeout) clearTimeout(state.toastTimeout);
+      state.toast = { message: msg, type };
+      renderToast();
+      state.toastTimeout = setTimeout(() => {
+        state.toast = null;
+        renderToast();
+      }, 3000);
+    }
+
+    function renderToast() {
+      let el = document.getElementById("toast");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "toast";
+        document.body.appendChild(el);
+      }
+      if (state.toast) {
+        el.className = "toast" + (state.toast.type === "error" ? " error" : "");
+        el.textContent = state.toast.message;
+        el.style.display = "block";
+      } else {
+        el.style.display = "none";
+      }
+    }
+
+    // ─── Stars SVG ───
+    function starSVG(filled, size = 14) {
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${filled ? '#d4a853' : 'none'}" stroke="${filled ? '#d4a853' : '#555'}" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    }
+
+    // ─── Filtering ───
+    function getFilteredSongs() {
+      let songs = [...state.songs];
+      const q = state.search.toLowerCase();
+
+      if (q) {
+        songs = songs.filter(s =>
+          s.title.toLowerCase().includes(q) ||
+          s.description.toLowerCase().includes(q) ||
+          s.tags.some(t => t.toLowerCase().includes(q))
+        );
+      }
+      if (state.filterAlbum !== "all") {
+        songs = songs.filter(s => s.album === state.filterAlbum);
+      }
+      if (state.filterStatus !== "all") {
+        songs = songs.filter(s => s.status === state.filterStatus);
+      }
+      if (state.filterTag) {
+        songs = songs.filter(s => s.tags.includes(state.filterTag));
+      }
+
+      songs.sort((a, b) => {
+        if (state.sortBy === "title") return a.title.localeCompare(b.title);
+        if (state.sortBy === "rating") return b.rating - a.rating;
+        if (state.sortBy === "album") return a.album.localeCompare(b.album);
+        if (state.sortBy === "status") {
+          const order = STATUS_OPTIONS.map(s => s.value);
+          return order.indexOf(a.status) - order.indexOf(b.status);
+        }
+        return a.order - b.order;
+      });
+
+      return songs;
+    }
+
+    function getAllTags() {
+      return [...new Set(state.songs.flatMap(s => s.tags))].sort();
+    }
+
+    // ─── Audio playback ───
+    async function playSong(songId) {
+      try {
+        const audioData = await getAudio(songId);
+        if (!audioData) {
+          showToast("No audio file — tap ♪ to add one", "error");
+          return;
+        }
+        if (currentAudioUrl) URL.revokeObjectURL(currentAudioUrl);
+        const blob = new Blob([audioData.data], { type: audioData.type || "audio/mpeg" });
+        currentAudioUrl = URL.createObjectURL(blob);
+        audioEl.src = currentAudioUrl;
+        audioEl.play();
+        state.playingSongId = songId;
+        state.isPlaying = true;
+        render();
+      } catch (e) {
+        showToast("Couldn't play audio", "error");
+      }
+    }
+
+    function togglePlay() {
+      if (state.isPlaying) {
+        audioEl.pause();
+        state.isPlaying = false;
+      } else {
+        audioEl.play();
+        state.isPlaying = true;
+      }
+      updateNowPlaying();
+    }
+
+    function seekAudio(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      if (audioEl.duration) {
+        audioEl.currentTime = pct * audioEl.duration;
+      }
+    }
+
+    function updateNowPlaying() {
+      const npEl = document.getElementById("now-playing-section");
+      if (!npEl) return;
+      const playBtn = npEl.querySelector(".play-btn");
+      if (playBtn) {
+        playBtn.innerHTML = state.isPlaying
+          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+      }
+      const fill = npEl.querySelector(".audio-fill");
+      if (fill && state.audioDuration) {
+        fill.style.width = ((state.audioCurrentTime / state.audioDuration) * 100) + "%";
+      }
+      const timeEl = npEl.querySelector(".audio-time");
+      if (timeEl) {
+        timeEl.textContent = formatTime(state.audioCurrentTime) + " / " + formatTime(state.audioDuration);
+      }
+    }
+
+    // ─── Move songs ───
+    function moveSong(fromIdx, toIdx) {
+      const filtered = getFilteredSongs();
+      if (toIdx < 0 || toIdx >= filtered.length) return;
+      const sorted = [...filtered];
+      const [moved] = sorted.splice(fromIdx, 1);
+      sorted.splice(toIdx, 0, moved);
+      const reordered = sorted.map((s, i) => ({ ...s, order: i }));
+      const otherSongs = state.songs.filter(s => !reordered.find(r => r.id === s.id));
+      state.songs = [...reordered, ...otherSongs];
+      saveSongsData(state.songs);
+      render();
+    }
+
+    // ─── Render: Library ───
+    function renderLibrary() {
+      const filtered = getFilteredSongs();
+      const allTags = getAllTags();
+      const stats = {
+        total: state.songs.length,
+        final: state.songs.filter(s => s.status === "final").length,
+        released: state.songs.filter(s => s.status === "released").length,
+        versions: state.songs.reduce((a, s) => a + s.versions.length, 0)
+      };
+      const playingSong = state.songs.find(s => s.id === state.playingSongId);
+
+      let html = `
+        <div class="stats">
+          <div class="stat"><span class="stat-num">${stats.total}</span><span class="stat-label">Songs</span></div>
+          <div class="stat"><span class="stat-num">${stats.versions}</span><span class="stat-label">Versions</span></div>
+          <div class="stat"><span class="stat-num">${stats.final}</span><span class="stat-label">Final</span></div>
+          <div class="stat"><span class="stat-num">${stats.released}</span><span class="stat-label">Released</span></div>
+        </div>
+
+        <div class="filters">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" placeholder="Search songs, tags..." value="${esc(state.search)}" oninput="state.search=this.value;render()">
+            ${state.search ? '<button class="clear-btn" onclick="state.search=\'\';render()">×</button>' : ''}
+          </div>
+          <div class="filter-row">
+            <select class="sel" onchange="state.filterAlbum=this.value;render()">
+              <option value="all"${state.filterAlbum === 'all' ? ' selected' : ''}>All Albums</option>
+              ${ALBUMS.map(a => `<option value="${a}"${state.filterAlbum === a ? ' selected' : ''}>${a}</option>`).join('')}
+            </select>
+            <select class="sel" onchange="state.filterStatus=this.value;render()">
+              <option value="all"${state.filterStatus === 'all' ? ' selected' : ''}>All Status</option>
+              ${STATUS_OPTIONS.map(s => `<option value="${s.value}"${state.filterStatus === s.value ? ' selected' : ''}>${s.label}</option>`).join('')}
+            </select>
+            ${allTags.length > 0 ? `
+            <select class="sel" onchange="state.filterTag=this.value;render()">
+              <option value=""${!state.filterTag ? ' selected' : ''}>All Tags</option>
+              ${allTags.map(t => `<option value="${t}"${state.filterTag === t ? ' selected' : ''}>#${t}</option>`).join('')}
+            </select>` : ''}
+            <select class="sel" onchange="state.sortBy=this.value;render()">
+              <option value="order"${state.sortBy === 'order' ? ' selected' : ''}>Manual Order</option>
+              <option value="title"${state.sortBy === 'title' ? ' selected' : ''}>By Title</option>
+              <option value="rating"${state.sortBy === 'rating' ? ' selected' : ''}>By Rating</option>
+              <option value="album"${state.sortBy === 'album' ? ' selected' : ''}>By Album</option>
+              <option value="status"${state.sortBy === 'status' ? ' selected' : ''}>By Status</option>
+            </select>
+          </div>
+        </div>`;
+
+      // Now Playing
+      if (state.playingSongId && playingSong) {
+        html += `
+        <div class="now-playing" id="now-playing-section">
+          <button class="play-btn" onclick="togglePlay()">
+            ${state.isPlaying
+              ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+              : '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>'}
+          </button>
+          <div class="np-info" style="flex:1;min-width:0">
+            <div class="np-label">Now Playing</div>
+            <div class="np-title">${esc(playingSong.title || 'Untitled')}</div>
+            <div class="audio-bar">
+              <div class="audio-progress" onclick="seekAudio(event)">
+                <div class="audio-fill" style="width:${state.audioDuration ? (state.audioCurrentTime / state.audioDuration * 100) : 0}%"></div>
+              </div>
+              <span class="audio-time">${formatTime(state.audioCurrentTime)} / ${formatTime(state.audioDuration)}</span>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      // Songs
+      if (filtered.length === 0) {
+        if (state.songs.length === 0) {
+          html += `
+          <div class="empty">
+            <div class="empty-icon">🕸️</div>
+            <h3 class="empty-title">Your vault is empty</h3>
+            <p class="empty-text">Add your first song to start building your library</p>
+            <button class="btn btn-primary" onclick="addSong()">+ Add Your First Song</button>
+          </div>`;
+        } else {
+          html += `
+          <div class="empty">
+            <div class="empty-icon">🔍</div>
+            <h3 class="empty-title">No matches</h3>
+            <p class="empty-text">Try adjusting your search or filters</p>
+          </div>`;
+        }
+      } else {
+        html += '<div class="song-list">';
+        filtered.forEach((song, index) => {
+          const si = STATUS_OPTIONS.find(s => s.value === song.status) || STATUS_OPTIONS[0];
+          const cv = song.versions.find(v => v.isCurrent);
+          const hasFile = state.audioMap[song.id];
+
+          html += `
+          <div class="song-card" id="song-${song.id}">
+            <div class="song-top">
+              <div class="song-num">${index + 1}</div>
+              <div class="song-body">
+                <div class="song-title-row">
+                  <span class="song-title">${esc(song.title || 'Untitled')}</span>
+                  <span class="status-badge" style="background:${si.color}22;color:${si.color};border-color:${si.color}44">${si.label}</span>
+                </div>
+                ${song.album ? `<div class="song-album">${esc(song.album)}</div>` : ''}
+                ${song.description ? `<p class="song-desc">${esc(song.description)}</p>` : ''}
+                <div class="song-meta">
+                  <div class="stars">
+                    ${[1,2,3,4,5].map(n => `<button class="star" onclick="quickRate('${song.id}',${n})">${starSVG(n <= song.rating)}</button>`).join('')}
+                  </div>
+                  ${song.versions.length > 0 ? `<span class="ver-count">${song.versions.length} ver${song.versions.length !== 1 ? 's' : ''}${cv ? ' · Current: ' + esc(cv.label) : ''}</span>` : ''}
+                  ${hasFile ? '<span class="ver-count">♪ audio</span>' : ''}
+                </div>
+                ${song.tags.length > 0 ? `<div class="tags">${song.tags.map(t => `<button class="tag" onclick="state.filterTag='${t}';render()">#${t}</button>`).join('')}</div>` : ''}
+              </div>
+            </div>
+            <div class="song-actions">
+              ${state.sortBy === 'order' ? `
+              <div class="move-btns">
+                <button class="move-btn" onclick="moveSong(${index},${index - 1})" ${index === 0 ? 'disabled' : ''}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                </button>
+                <button class="move-btn" onclick="moveSong(${index},${index + 1})" ${index === filtered.length - 1 ? 'disabled' : ''}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>` : ''}
+              ${hasFile ? `<button class="btn btn-sm" onclick="playSong('${song.id}')" style="color:var(--gold)">▶</button>` : ''}
+              <input type="file" accept="audio/*" class="hidden-input" id="af-${song.id}" onchange="handleAudioUpload('${song.id}',this)">
+              <button class="btn btn-sm" onclick="document.getElementById('af-${song.id}').click()">♪</button>
+              <button class="btn btn-sm" onclick="editSong('${song.id}')">Edit</button>
+              ${state.confirmDeleteId === song.id
+                ? `<div class="confirm-del">
+                    <button class="btn btn-danger" onclick="deleteSong('${song.id}')">Delete</button>
+                    <button class="btn btn-sm" onclick="state.confirmDeleteId=null;render()">Cancel</button>
+                  </div>`
+                : `<button class="btn btn-sm-danger" onclick="state.confirmDeleteId='${song.id}';render()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>`}
+            </div>
+          </div>`;
+        });
+        html += '</div>';
+      }
+
+      return html;
+    }
+
+    // ─── Render: Edit ───
+    function renderEdit() {
+      const song = state.editingSong;
+      if (!song) return '';
+
+      let html = `
+        <div class="edit-container">
+          <h2 class="edit-title">${song.title ? 'Editing: ' + esc(song.title) : 'New Song'}</h2>
+
+          <div class="form-section">
+            <label class="label">Song Title</label>
+            <input class="inp" type="text" value="${esc(song.title)}" oninput="state.editingSong.title=this.value" placeholder="Enter song title...">
+          </div>
+
+          <div class="form-row" style="margin-bottom:18px">
+            <div class="form-section">
+              <label class="label">Album</label>
+              <select class="sel" style="width:100%" onchange="state.editingSong.album=this.value">
+                <option value="">Select album...</option>
+                ${ALBUMS.map(a => `<option value="${a}"${song.album === a ? ' selected' : ''}>${a}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-section">
+              <label class="label">Status</label>
+              <select class="sel" style="width:100%" onchange="state.editingSong.status=this.value">
+                ${STATUS_OPTIONS.map(s => `<option value="${s.value}"${song.status === s.value ? ' selected' : ''}>${s.label}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <label class="label">Description / Notes</label>
+            <textarea class="txta" rows="4" oninput="state.editingSong.description=this.value" placeholder="Notes about the song, mood, changes needed...">${esc(song.description)}</textarea>
+          </div>
+
+          <div class="form-section">
+            <label class="label">Rating</label>
+            <div class="stars-row">
+              ${[1,2,3,4,5].map(n => `<button class="star" onclick="state.editingSong.rating=${n}===state.editingSong.rating?0:${n};render()">${starSVG(n <= song.rating, 26)}</button>`).join('')}
+              ${song.rating > 0 ? `<span class="rating-text">${song.rating}/5</span>` : ''}
+            </div>
+          </div>
+
+          <div class="form-section">
+            <label class="label">Tags</label>
+            <div class="tag-input-row">
+              <input class="inp" style="flex:1" type="text" id="tag-input" value="${esc(state.tagInput)}" oninput="state.tagInput=this.value" onkeydown="handleTagKey(event)" placeholder="Type a tag and press Enter...">
+              <button class="btn btn-sm" onclick="addTagFromInput()">Add</button>
+            </div>
+            ${song.tags.length > 0 ? `
+            <div class="tags" style="margin-top:8px">
+              ${song.tags.map(t => `<span class="tag-editable">#${t}<button class="tag-remove" onclick="removeTag('${t}')">×</button></span>`).join('')}
+            </div>` : ''}
+            <div class="hint">Separate with Enter, comma, or space. E.g.: dark, orchestral, piano</div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-header">
+              <label class="label" style="margin-bottom:0">Versions</label>
+              <button class="btn btn-sm" onclick="addVersion()">+ Add Version</button>
+            </div>
+            ${song.versions.length === 0
+              ? '<div class="hint">Track different versions — useful when iterating on Suno generations</div>'
+              : `<div class="version-list">${song.versions.map((v, i) => renderVersion(v, i)).join('')}</div>`}
+          </div>
+
+          <div class="form-section">
+            <div class="section-header">
+              <label class="label" style="margin-bottom:0">Audio File</label>
+            </div>
+            <input type="file" accept="audio/*" class="hidden-input" id="edit-audio" onchange="handleEditAudio(this)">
+            <button class="btn btn-sm" onclick="document.getElementById('edit-audio').click()">♪ ${state.audioMap[song.id] ? 'Replace Audio File' : 'Add Audio File (MP3/WAV)'}</button>
+            ${state.audioMap[song.id] ? '<span class="ver-count" style="margin-left:8px">✓ Audio stored</span>' : ''}
+          </div>
+
+          <div class="edit-actions">
+            <button class="btn btn-ghost" onclick="cancelEdit()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveSong()" ${!song.title.trim() ? 'disabled style="opacity:0.5"' : ''}>Save Song</button>
+          </div>
+        </div>`;
+
+      return html;
+    }
+
+    function renderVersion(v, i) {
+      const expanded = state.expandedVersions[v.id];
+      return `
+      <div class="version-card">
+        <div class="version-hdr" onclick="toggleVersion('${v.id}')">
+          <div class="version-hdr-left">
+            <span class="version-num">#${i + 1}</span>
+            <input class="version-label-inp" type="text" value="${esc(v.label)}" onclick="event.stopPropagation()" oninput="updateVersion('${v.id}','label',this.value)" placeholder="Version label...">
+            ${v.isCurrent ? '<span class="current-badge">Current</span>' : ''}
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="${expanded ? '18 15 12 9 6 15' : '6 9 12 15 18 9'}"/></svg>
+        </div>
+        ${expanded ? `
+        <div class="version-body">
+          <div class="form-row" style="margin-bottom:10px;align-items:flex-end">
+            <div>
+              <label class="label-sm">Date</label>
+              <input class="inp-sm" type="date" value="${v.date}" onchange="updateVersion('${v.id}','date',this.value)">
+            </div>
+            <div class="version-actions">
+              <button class="btn ${v.isCurrent ? 'btn-current' : 'btn-sm'}" onclick="setCurrentVersion('${v.id}')">${v.isCurrent ? '★ Current' : 'Set Current'}</button>
+              <button class="btn btn-sm-danger" onclick="removeVersion('${v.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+          </div>
+          <label class="label-sm">Notes</label>
+          <textarea class="txta-sm" rows="2" oninput="updateVersion('${v.id}','notes',this.value)" placeholder="What changed? Suno link, etc...">${esc(v.notes)}</textarea>
+        </div>` : ''}
+      </div>`;
+    }
+
+    // ─── Actions ───
+    function addSong() {
+      state.editingSong = {
+        id: uid(),
+        title: "",
+        album: "",
+        description: "",
+        rating: 0,
+        tags: [],
+        versions: [],
+        order: state.songs.length,
+        createdAt: new Date().toISOString(),
+        status: "draft"
+      };
+      state.tagInput = "";
+      state.expandedVersions = {};
+      state.view = "edit";
+      render();
+    }
+
+    function editSong(id) {
+      const song = state.songs.find(s => s.id === id);
+      if (!song) return;
+      state.editingSong = JSON.parse(JSON.stringify(song));
+      state.tagInput = "";
+      state.expandedVersions = {};
+      state.view = "edit";
+      render();
+    }
+
+    function saveSong() {
+      const song = state.editingSong;
+      if (!song || !song.title.trim()) return;
+      const idx = state.songs.findIndex(s => s.id === song.id);
+      if (idx >= 0) {
+        state.songs[idx] = song;
+      } else {
+        state.songs.push(song);
+      }
+      saveSongsData(state.songs);
+      state.view = "library";
+      state.editingSong = null;
+      showToast(idx >= 0 ? "Song updated" : "Song added");
+      render();
+    }
+
+    function cancelEdit() {
+      state.view = "library";
+      state.editingSong = null;
+      render();
+    }
+
+    function deleteSong(id) {
+      state.songs = state.songs.filter(s => s.id !== id).map((s, i) => ({ ...s, order: i }));
+      saveSongsData(state.songs);
+      deleteAudio(id).catch(() => {});
+      delete state.audioMap[id];
+      state.confirmDeleteId = null;
+      if (state.editingSong?.id === id) {
+        state.view = "library";
+        state.editingSong = null;
+      }
+      if (state.playingSongId === id) {
+        audioEl.pause();
+        state.playingSongId = null;
+        state.isPlaying = false;
+      }
+      showToast("Song removed");
+      render();
+    }
+
+    function quickRate(id, rating) {
+      const song = state.songs.find(s => s.id === id);
+      if (!song) return;
+      song.rating = (song.rating === rating) ? 0 : rating;
+      saveSongsData(state.songs);
+      render();
+    }
+
+    // Tag functions
+    function handleTagKey(e) {
+      if (e.key === "Enter" || e.key === "," || e.key === " ") {
+        e.preventDefault();
+        addTagFromInput();
+      }
+    }
+
+    function addTagFromInput() {
+      const cleaned = state.tagInput.trim().replace(/^#/, "").toLowerCase().replace(/[,\s]/g, "");
+      if (cleaned && state.editingSong && !state.editingSong.tags.includes(cleaned)) {
+        state.editingSong.tags.push(cleaned);
+      }
+      state.tagInput = "";
+      render();
+      setTimeout(() => document.getElementById("tag-input")?.focus(), 50);
+    }
+
+    function removeTag(tag) {
+      if (!state.editingSong) return;
+      state.editingSong.tags = state.editingSong.tags.filter(t => t !== tag);
+      render();
+    }
+
+    // Version functions
+    function addVersion() {
+      if (!state.editingSong) return;
+      const v = {
+        id: uid(),
+        label: "v" + (state.editingSong.versions.length + 1),
+        notes: "",
+        date: new Date().toISOString().split("T")[0],
+        isCurrent: false
+      };
+      state.editingSong.versions.push(v);
+      state.expandedVersions[v.id] = true;
+      render();
+    }
+
+    function updateVersion(vId, field, value) {
+      if (!state.editingSong) return;
+      const v = state.editingSong.versions.find(v => v.id === vId);
+      if (v) v[field] = value;
+    }
+
+    function setCurrentVersion(vId) {
+      if (!state.editingSong) return;
+      state.editingSong.versions.forEach(v => v.isCurrent = (v.id === vId));
+      render();
+    }
+
+    function removeVersion(vId) {
+      if (!state.editingSong) return;
+      state.editingSong.versions = state.editingSong.versions.filter(v => v.id !== vId);
+      render();
+    }
+
+    function toggleVersion(vId) {
+      state.expandedVersions[vId] = !state.expandedVersions[vId];
+      render();
+    }
+
+    // Audio upload
+    async function handleAudioUpload(songId, input) {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        await saveAudio(songId, file);
+        state.audioMap[songId] = true;
+        showToast("Audio saved: " + file.name);
+        render();
+      } catch (e) {
+        showToast("Failed to save audio", "error");
+      }
+      input.value = "";
+    }
+
+    async function handleEditAudio(input) {
+      const file = input.files?.[0];
+      if (!file || !state.editingSong) return;
+      try {
+        await saveAudio(state.editingSong.id, file);
+        state.audioMap[state.editingSong.id] = true;
+        showToast("Audio saved: " + file.name);
+        render();
+      } catch (e) {
+        showToast("Failed to save audio", "error");
+      }
+      input.value = "";
+    }
+
+    // ─── Main render ───
+    function render() {
+      const app = document.getElementById("app");
+      let html = `
+        <header class="header">
+          <div class="header-inner">
+            <div class="logo">
+              <span class="logo-icon">🕸️</span>
+              <div>
+                <div class="logo-title">Song Vault</div>
+                <div class="logo-sub">Arachne Music Library</div>
+              </div>
+            </div>
+            ${state.view === "edit"
+              ? '<button class="btn btn-ghost" onclick="cancelEdit()">← Back</button>'
+              : '<button class="btn btn-primary" onclick="addSong()">+ Add Song</button>'}
+          </div>
+        </header>
+        <main class="main">
+          ${state.view === "library" ? renderLibrary() : renderEdit()}
+        </main>`;
+
+      app.innerHTML = html;
+    }
+
+    // ─── Init ───
+    async function init() {
+      document.getElementById("app").innerHTML = `
+        <div class="loading">
+          <div class="loading-icon">🕷️</div>
+          <div class="loading-text">Loading your vault...</div>
+        </div>`;
+
+      state.songs = loadSongs();
+
+      // Check which songs have audio
+      for (const song of state.songs) {
+        try {
+          const has = await hasAudio(song.id);
+          if (has) state.audioMap[song.id] = true;
+        } catch {}
+      }
+
+      render();
+    }
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
